@@ -26,7 +26,7 @@
     <ul id="messages"></ul>
 
     <script>
-        let es = null;
+        let sseClient;
 
         const connectButton = document.getElementById('connectButton');
         const triggerButton = document.getElementById('triggerButton');
@@ -39,27 +39,27 @@
         }
 
         function connect() {
-            es = new EventSource('http://localhost:4000/events');
+            sseClient = new EventSource('http://localhost:4000/sse');
 
-            es.onopen = () => {
+            sseClient.onopen = () => {
                 connectButton.textContent = 'Connected';
                 triggerButton.style.display = 'inline-block';
                 addMessage('CONNECTED');
             };
 
-            es.onmessage = (event) => {
+            sseClient.onmessage = (event) => {
                 addMessage(event.data);
             };
 
-            es.onerror = () => {
+            sseClient.onerror = () => {
                 addMessage('ERROR');
             };
         }
 
         function disconnect() {
-            if (!es) return;
-            es.close();
-            es = null;
+            if (!sseClient) return;
+            sseClient.close();
+            sseClient = null;
             connectButton.textContent = 'Connect';
             triggerButton.style.display = 'none';
         }
@@ -71,7 +71,7 @@
         }
 
         function handleClick() {
-            if (es) {
+            if (sseClient) {
                 disconnect();
             } else {
                 connect();

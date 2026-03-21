@@ -1,1 +1,2 @@
-# Команда для запуска sse-сервера
+./gradlew clean build
+docker-compose up --build
